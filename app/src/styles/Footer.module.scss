@@ -1,0 +1,9 @@
+@use 'helpers' as *;
+
+.footer {
+  @include rounded;
+  margin-inline: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background-color: #eee;
+}

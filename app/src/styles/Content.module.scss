@@ -1,0 +1,8 @@
+@use 'helpers' as *;
+
+.content {
+  @include rounded;
+  background-color: #eee;
+  margin-inline: 1rem;
+  padding: 1rem;
+}
