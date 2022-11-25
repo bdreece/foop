@@ -1,10 +1,10 @@
 import type { FC } from 'react';
 import Layout from '../components/layout';
 
-const Index: FC = () => (
+const About: FC = () => (
   <Layout>
-    <h3>Hello, world!</h3>
+    <h3>About me!</h3>
   </Layout>
 );
 
-export default Index;
+export default About;
