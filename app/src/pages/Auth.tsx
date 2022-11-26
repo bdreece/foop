@@ -7,12 +7,10 @@ import styles from '../styles/Auth.module.scss';
 
 const Auth: FC = () => {
   return (
-    <Layout>
-      <div className={styles.auth}>
-        <LoginForm />
-        <RegisterForm />
-      </div>
-    </Layout>
+    <div className={styles.auth}>
+      <LoginForm />
+      <RegisterForm />
+    </div>
   );
 };
 
