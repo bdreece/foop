@@ -35,12 +35,7 @@ const AccessProvider: FC<AccessProviderProps> = ({ children }) => {
   );
 
   return (
-    <context.Provider
-      value={{
-        accessToken: data?.refreshUser?.accessToken,
-        expiresIn: data?.refreshUser?.expiresIn,
-      }}
-    >
+    <context.Provider value={{ ...data?.refreshUser }}>
       {children}
     </context.Provider>
   );
