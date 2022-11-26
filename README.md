@@ -1,3 +1,3 @@
 # foop
 
-A superfood clone for my mom's recipes
+A supercook clone for my mom's recipes
