@@ -25,7 +25,7 @@ const context: ContextFunction<any[], Context> = async ({ req, res }) => ({
 });
 
 const authChecker: AuthChecker<Context> = ({ context }, roles) =>
-  _.intersection(roles ?? [], context.user?.roles ?? []).length > 0;
+  roles ? _.intersection(roles, context.user?.roles ?? []).length > 0 : true;
 
 export const createGraphQLMiddleware = async () => {
   const { typeDefs, resolvers } = await buildTypeDefsAndResolvers({
