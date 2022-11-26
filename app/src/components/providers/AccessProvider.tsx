@@ -1,7 +1,8 @@
 import type { FC } from 'react';
 import type { ChildrenProps } from '../../types/children';
+
 import { createContext, useContext } from 'react';
-import { gql, useQuery } from '@apollo/client';
+import { gql, useApolloClient, useQuery } from '@apollo/client';
 
 export type AccessContext = {
   accessToken?: string;
@@ -14,18 +15,35 @@ const context = createContext<AccessContext>({});
 
 export const useAccess = () => useContext(context);
 
-const REFRESH_USER = gql`
-  query {
-    refreshUser {
-      accessToken
-      expiresIn
-    }
-  }
-`;
-
 const AccessProvider: FC<AccessProviderProps> = ({ children }) => {
-  const { data } = useQuery<AccessContext>(REFRESH_USER);
-  return <context.Provider value={{ ...data }}>{children}</context.Provider>;
+  const client = useApolloClient();
+  const { data } = useQuery<{ refreshUser: AccessContext }>(
+    gql`
+      query RefreshUser {
+        refreshUser {
+          accessToken
+          expiresIn
+        }
+      }
+    `,
+    {
+      onCompleted: ({ refreshUser }) => {
+        sessionStorage.setItem('AccessToken', JSON.stringify(refreshUser));
+        client.refetchQueries({ include: ['Self'] });
+      },
+    },
+  );
+
+  return (
+    <context.Provider
+      value={{
+        accessToken: data?.refreshUser?.accessToken,
+        expiresIn: data?.refreshUser?.expiresIn,
+      }}
+    >
+      {children}
+    </context.Provider>
+  );
 };
 
 export default AccessProvider;

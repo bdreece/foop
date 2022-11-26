@@ -1,0 +1,13 @@
+@use 'helpers' as *;
+
+.form {
+  @include rounded('sm');
+  background-color: #ddd;
+  padding: 1rem;
+  width: 40vw;
+
+  button[type='submit'] {
+    margin-block: 0.5rem;
+    padding: 0.5rem;
+  }
+}

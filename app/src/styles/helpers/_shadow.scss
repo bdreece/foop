@@ -1,0 +1,14 @@
+$shadow_radii: (
+  'sm': 4px,
+  'md': 8px,
+  'lg': 12px,
+);
+
+@function get_shadow_radii($breakpoint) {
+  @return map-get($shadow_radii, $breakpoint);
+}
+
+@mixin shadow($breakpoint: 'md') {
+  box-shadow: get_shadow_radii($breakpoint) get_shadow_radii($breakpoint) 1.5rem
+    #666;
+}

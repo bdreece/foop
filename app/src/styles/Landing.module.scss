@@ -1,0 +1,7 @@
+@use 'helpers' as *;
+
+.landing {
+  @include box($direction: column);
+  margin-inline: auto;
+  max-width: 50vw;
+}

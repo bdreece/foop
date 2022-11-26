@@ -26,6 +26,14 @@ body {
   padding: 0;
 }
 
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
 .spacer {
   flex: 1;
 }

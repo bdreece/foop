@@ -1,0 +1,8 @@
+@use 'helpers' as *;
+
+.field {
+  @include box($direction: column);
+  input {
+    padding: 0.5rem;
+  }
+}

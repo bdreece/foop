@@ -1,13 +1,13 @@
-$radii: (
+$border_radii: (
   'sm': 0.5rem,
   'md': 1rem,
   'lg': 1.5rem,
 );
 
-@function get_radii($breakpoint) {
-  @return map-get($radii, $breakpoint);
+@function get_border_radii($breakpoint) {
+  @return map-get($border_radii, $breakpoint);
 }
 
 @mixin rounded($breakpoint: 'md') {
-  border-radius: get_radii($breakpoint);
+  border-radius: get_border_radii($breakpoint);
 }

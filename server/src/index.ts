@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import express from 'express';
+import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import cors from 'cors';
 import morgan from 'morgan';
@@ -10,8 +11,15 @@ import { createGraphQLMiddleware } from './api/graphql';
 const PORT = process.env.PORT || 8080;
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 app.use(compression());
-app.use(cors({ origin: '*' }));
+app.use(
+  cors({
+    origin: 'http://localhost:5173',
+    exposedHeaders: 'set-cookie',
+    credentials: true,
+  }),
+);
 app.use(morgan('dev'));
 app.post('/api/graphql', authenticate);
 

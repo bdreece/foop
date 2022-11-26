@@ -20,11 +20,30 @@ model User {
   dateCreated     DateTime @default(now())
   dateLastUpdated DateTime @default(now())
 
-  phone   String   @unique
-  hash    String
-  salt    String
-  roles   Role[]
-  recipes Recipe[]
+  firstName   String
+  lastName    String
+  avatar      Image?           @relation(fields: [avatarId], references: [id])
+  avatarId    Int?             @unique
+  phone       String           @unique
+  /// @TypeGraphQL.omit(output: true)
+  hash        String
+  /// @TypeGraphQL.omit(output: true)
+  salt        String
+  roles       UserRole[]
+  recipes     Recipe[]
+  ingredients UserIngredient[]
+}
+
+model UserRole {
+  dateCreated     DateTime @default(now())
+  dateLastUpdated DateTime @default(now())
+
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
+  role   Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  roleId Int
+
+  @@id([userId, roleId])
 }
 
 model Role {
@@ -32,9 +51,46 @@ model Role {
   dateCreated     DateTime @default(now())
   dateLastUpdated DateTime @default(now())
 
-  user   User?  @relation(fields: [userId], references: [id])
-  userId Int?
-  name   String @unique
+  name  String     @unique
+  users UserRole[]
+}
+
+model Image {
+  id              Int      @id @default(autoincrement())
+  dateCreated     DateTime @default(now())
+  dateLastUpdated DateTime @default(now())
+
+  src    String
+  alt    String?
+  width  Int
+  height Int
+
+  user         User?
+  tags         Tag[]
+  recipes      Recipe[]
+  recipeStep   RecipeStep? @relation(fields: [recipeStepId], references: [id])
+  recipeStepId Int?
+  ingredient   Ingredient? @relation(fields: [ingredientId], references: [id])
+  ingredientId Int?
+}
+
+model Tag {
+  id              Int      @id @default(autoincrement())
+  dateCreated     DateTime @default(now())
+  dateLastUpdated DateTime @default(now())
+
+  name        String
+  description String?
+
+  image            Image?          @relation(fields: [imageId], references: [id])
+  imageId          Int?
+  recipe           Recipe?         @relation(fields: [recipeId], references: [id], onDelete: SetNull)
+  recipeId         Int?
+  userIngredient   UserIngredient? @relation(fields: [userId, userIngredientId], references: [userId, ingredientId], onDelete: SetNull)
+  userId           Int?
+  userIngredientId Int?
+  ingredient       Ingredient?     @relation(fields: [ingredientId], references: [id], onDelete: SetNull)
+  ingredientId     Int?
 }
 
 model Recipe {
@@ -43,10 +99,28 @@ model Recipe {
   dateLastUpdated DateTime @default(now())
 
   name        String
-  description String
-  user        User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  description String?
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      Int
+  images      Image[]
+
   ingredients RecipeIngredient[]
+  steps       RecipeStep[]
+  tags        Tag[]
+}
+
+model RecipeStep {
+  id              Int      @id @default(autoincrement())
+  dateCreated     DateTime @default(now())
+  dateLastUpdated DateTime @default(now())
+
+  summary  String
+  details  String?
+  duration Int
+  images   Image[]
+
+  recipe   Recipe? @relation(fields: [recipeId], references: [id])
+  recipeId Int?
 }
 
 model RecipeIngredient {
@@ -62,14 +136,33 @@ model RecipeIngredient {
   @@id([recipeId, ingredientId])
 }
 
+model UserIngredient {
+  user         User       @relation(fields: [userId], references: [id])
+  userId       Int
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
+  ingredientId Int
+  unit         Unit       @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  unitId       Int
+
+  quantity Float
+  remarks  String?
+  tags     Tag[]
+
+  @@id([userId, ingredientId])
+}
+
 model Ingredient {
   id              Int      @id @default(autoincrement())
   dateCreated     DateTime @default(now())
   dateLastUpdated DateTime @default(now())
 
-  name        String
-  description String
-  recipes     RecipeIngredient[]
+  name        String  @unique
+  description String?
+  images      Image[]
+
+  recipes RecipeIngredient[]
+  users   UserIngredient[]
+  tags    Tag[]
 }
 
 model Unit {
@@ -77,7 +170,8 @@ model Unit {
   dateCreated     DateTime @default(now())
   dateLastUpdated DateTime @default(now())
 
-  name    String
-  symbol  String
-  recipes RecipeIngredient[]
+  name              String             @unique
+  symbol            String?
+  recipeIngredients RecipeIngredient[]
+  userIngredients   UserIngredient[]
 }
