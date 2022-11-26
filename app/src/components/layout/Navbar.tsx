@@ -8,11 +8,11 @@ const Navbar: FC = () => {
   return (
     <nav className={styles.navbar}>
       <h1>
-        <Link to='/'>foop</Link>
+        <Link to={profile ? '/dashboard' : '/'}>foop</Link>
       </h1>
       <ul>
         <li>
-          <Link to='/'>Home</Link>
+          <Link to={profile ? '/dashboard/' : '/'}>Home</Link>
         </li>
         <li>
           <Link to='/about'>About</Link>
